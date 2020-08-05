@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Tarot de Marsella</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Pamela Lazarte</string>
+    <string name="nav_header_subtitle">pamela@techtoserve.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_collections">Colecciones</string>
+    <string name="menu_themes">Temas</string>
+    <string name="menu_experiments">Experimentos</string>
+    <string name="menu_downloads">Descargas</string>
+    <string name="menu_notifications">Notificaciones</string>
+    <string name="menu_comments">Envía comentarios</string>
+    <string name="menu_about">Acerca de</string>
+
+    <string name="home_one_title">Tirada a una carta</string>
+    <string name="home_one_description">Si buscas una reflexión o un consejo que te ayude a responder
+        lo que anhelas saber. Esta tirada a una carta te dará las pautas que necesitas.</string>
+    <string name="home_two_title">Tirada clásica</string>
+    <string name="home_two_description">La tirada de 3 cartas te da una visión más amplia y
+        completa para responder a tus dudas.</string>
+    <string name="home_three_title">El camino</string>
+    <string name="home_three_description">Cuatro cartas que dibujan una senda. Las cartas de
+        Marsella te señalan los primeros pasos, cuál es el desarrollo a tomar, el acercamiento a una
+        solución y una reflexión.</string>
+
+</resources>
