@@ -2,6 +2,7 @@ package com.jossemar.tarotdemarsella.ui.game
 
 import android.content.ClipData
 import android.content.ClipDescription
+import android.content.Intent
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
 import android.graphics.Color
@@ -24,6 +25,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jossemar.tarotdemarsella.R
+import com.jossemar.tarotdemarsella.ui.detail.DetailActivity
 
 class GameActivity : AppCompatActivity(), MoveClickListener {
 
@@ -35,6 +37,7 @@ class GameActivity : AppCompatActivity(), MoveClickListener {
     private lateinit var instFive: TextView
     private lateinit var cards: LinearLayout
     private lateinit var result: AppCompatButton
+    private var selected: ArrayList<String> = ArrayList()
     private var statusOne: Boolean = false
     private var statusTwo: Boolean = false
     private var statusThree: Boolean = false
@@ -77,6 +80,11 @@ class GameActivity : AppCompatActivity(), MoveClickListener {
         findViewById<View>(R.id.locker_five).setOnDragListener { view, dragEvent ->
             if (statusFour && !statusFive) OnDrag(view,dragEvent, 5) else false
         }
+        result.setOnClickListener {
+            val intent = Intent(baseContext, DetailActivity::class.java)
+            intent.putStringArrayListExtra("SELECTED_CARDS", selected)
+            startActivity(intent)
+        }
     }
 
     fun OnDrag(v: View, event: DragEvent, status: Int): Boolean {
@@ -112,6 +120,7 @@ class GameActivity : AppCompatActivity(), MoveClickListener {
                 val container = v as LinearLayout
                 container.addView(vw)
                 vw.visibility = View.VISIBLE
+                selected.add(dragData)
                 vw.setBackgroundResource(applicationContext.resources.getIdentifier(dragData,"drawable",packageName))
                 when (status) {
                     1 -> statusOne = true
@@ -147,7 +156,7 @@ class GameActivity : AppCompatActivity(), MoveClickListener {
                 instFive.visibility = View.GONE
                 return true
             }
-            else -> Log.e("DragDrop Example", "Unknown action type received by OnDragListener.")
+            else -> Log.e("DragDrop Tarot", "Unknown action type received by OnDragListener.")
         }
         return false
     }

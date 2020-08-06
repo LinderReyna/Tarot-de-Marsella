@@ -12,8 +12,7 @@ class RecyclerAdapter(var items: List<Arcane>, private val listener: MoveClickLi
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerItemViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_game,parent,false)
-        val holder = RecyclerItemViewHolder(view)
-        return holder
+        return RecyclerItemViewHolder(view)
     }
 
     override fun getItemCount(): Int {
