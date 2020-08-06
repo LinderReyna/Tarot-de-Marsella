@@ -3,12 +3,14 @@ package com.jossemar.tarotdemarsella.ui.game
 import android.content.ClipData
 import android.content.ClipDescription
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.DragEvent
 import android.view.MenuItem
@@ -51,13 +53,9 @@ class GameActivity : AppCompatActivity(), MoveClickListener {
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val recyclerView: RecyclerView = findViewById(R.id.game_recycler)
-        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        recyclerView.addItemDecoration(ItemDecorator(-100))
-        gameViewModel.listCards.observe(this, Observer {
-            recyclerView.adapter = RecyclerAdapter(it,this)
-        })
-
+        val orientation = this.resources.configuration.orientation
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
         instOne = findViewById(R.id.inst_one)
         instTwo = findViewById(R.id.inst_two)
         instThree = findViewById(R.id.inst_three)
@@ -65,19 +63,45 @@ class GameActivity : AppCompatActivity(), MoveClickListener {
         instFive = findViewById(R.id.inst_five)
         cards = findViewById(R.id.game_cards)
         result = findViewById(R.id.game_results)
-        findViewById<View>(R.id.locker_one).setOnDragListener { view, dragEvent ->
+        val lockerOne =  findViewById<View>(R.id.locker_one)
+        val lockerTwo = findViewById<View>(R.id.locker_two)
+        val lockerThree = findViewById<View>(R.id.locker_three)
+        val lockerFour = findViewById<View>(R.id.locker_four)
+        val lockerFive = findViewById<View>(R.id.locker_five)
+        var height = displayMetrics.heightPixels / 5
+        var width = displayMetrics.heightPixels / 10
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE){
+            height = displayMetrics.heightPixels / 4
+            width = displayMetrics.heightPixels / 8
+        }
+        lockerOne.layoutParams.height = height
+        lockerOne.layoutParams.width = width
+        lockerOne.requestLayout()
+        lockerTwo.layoutParams.height = height
+        lockerTwo.layoutParams.width = width
+        lockerTwo.requestLayout()
+        lockerThree.layoutParams.height = height
+        lockerThree.layoutParams.width = width
+        lockerThree.requestLayout()
+        lockerFour.layoutParams.height = height
+        lockerFour.layoutParams.width = width
+        lockerFour.requestLayout()
+        lockerFive.layoutParams.height = height
+        lockerFive.layoutParams.width = width
+        lockerFive.requestLayout()
+        lockerOne.setOnDragListener { view, dragEvent ->
             if (!statusOne) OnDrag(view,dragEvent, 1) else false
         }
-        findViewById<View>(R.id.locker_two).setOnDragListener { view, dragEvent ->
+        lockerTwo.setOnDragListener { view, dragEvent ->
             if (statusOne && !statusTwo) OnDrag(view,dragEvent, 2) else false
         }
-        findViewById<View>(R.id.locker_three).setOnDragListener { view, dragEvent ->
+        lockerThree.setOnDragListener { view, dragEvent ->
             if (statusTwo && !statusThree) OnDrag(view,dragEvent, 3) else false
         }
-        findViewById<View>(R.id.locker_four).setOnDragListener { view, dragEvent ->
+        lockerFour.setOnDragListener { view, dragEvent ->
             if (statusThree && !statusFour) OnDrag(view,dragEvent, 4) else false
         }
-        findViewById<View>(R.id.locker_five).setOnDragListener { view, dragEvent ->
+        lockerFive.setOnDragListener { view, dragEvent ->
             if (statusFour && !statusFive) OnDrag(view,dragEvent, 5) else false
         }
         result.setOnClickListener {
@@ -85,6 +109,13 @@ class GameActivity : AppCompatActivity(), MoveClickListener {
             intent.putStringArrayListExtra("SELECTED_CARDS", selected)
             startActivity(intent)
         }
+
+        val recyclerView: RecyclerView = findViewById(R.id.game_recycler)
+        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        recyclerView.addItemDecoration(ItemDecorator(-110))
+        gameViewModel.listCards.observe(this, Observer {
+            recyclerView.adapter = RecyclerAdapter(it,this, displayMetrics.heightPixels)
+        })
     }
 
     fun OnDrag(v: View, event: DragEvent, status: Int): Boolean {
@@ -111,7 +142,6 @@ class GameActivity : AppCompatActivity(), MoveClickListener {
             DragEvent.ACTION_DROP -> {
                 val item = event.clipData.getItemAt(0)
                 val dragData = item.text.toString()
-                Toast.makeText(this, "Dragged data is $dragData ", Toast.LENGTH_SHORT).show()
                 v.background.clearColorFilter()
                 v.invalidate()
                 val vw = event.localState as View
@@ -122,6 +152,9 @@ class GameActivity : AppCompatActivity(), MoveClickListener {
                 vw.visibility = View.VISIBLE
                 selected.add(dragData)
                 vw.setBackgroundResource(applicationContext.resources.getIdentifier(dragData,"drawable",packageName))
+                vw.setOnLongClickListener {
+                    true
+                }
                 when (status) {
                     1 -> statusOne = true
                     2 -> statusTwo = true
@@ -143,12 +176,6 @@ class GameActivity : AppCompatActivity(), MoveClickListener {
             DragEvent.ACTION_DRAG_ENDED -> {
                 v.background.clearColorFilter()
                 v.invalidate()
-                if (event.result) Toast.makeText(
-                    this,
-                    "The drop was handled.",
-                    Toast.LENGTH_SHORT
-                ).show() else Toast.makeText(this, "The drop didn't work.", Toast.LENGTH_SHORT)
-                    .show()
                 instOne.visibility = View.GONE
                 instTwo.visibility = View.GONE
                 instThree.visibility = View.GONE

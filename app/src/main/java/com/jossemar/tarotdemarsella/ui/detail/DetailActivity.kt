@@ -1,6 +1,7 @@
 package com.jossemar.tarotdemarsella.ui.detail
 
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -22,6 +23,9 @@ class DetailActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+
         val selected : ArrayList<String> = intent.getStringArrayListExtra("SELECTED_CARDS")
         val recyclerView: RecyclerView = findViewById(R.id.detail_recycler)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -34,8 +38,9 @@ class DetailActivity : AppCompatActivity() {
                     }
                 }
             }
-            recyclerView.adapter = RecyclerAdapter(listSelect, applicationContext)
+            recyclerView.adapter = RecyclerAdapter(listSelect, applicationContext, displayMetrics.heightPixels)
         })
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
